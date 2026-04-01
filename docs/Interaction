@@ -1,0 +1,3 @@
+Class Name                    Responsibilty                               Interacts With                       Reason
+Aircraft            Stores aircraft data and manages it                  Runway                          This need to be assigned a runway in order to land safley
+Runway                stores runway information to then assign             Aircraft                         This needs to tallk with the aircraft to assign them a runway
