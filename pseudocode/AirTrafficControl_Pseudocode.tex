@@ -1,0 +1,144 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\begin{document}
+
+% -------------------------------------------------------
+% FUNCTIONALITY 1: Create Aircraft
+% -------------------------------------------------------
+\begin{algorithm}
+\caption{Create Aircraft (C++ OOP Style)}
+\begin{algorithmic}[1]
+\State \textbf{Functionality:} Create Aircraft
+\State \textbf{Purpose:} Initialize an aircraft object with flight data and add it to the system
+\State \textbf{Input:} flightId, callsign, status, x, y, altitude, speed, heading
+\State \textbf{Output:} A new Aircraft object with all fields set
+\vspace{0.3cm}
+\State \textbf{Class} \textit{Aircraft}
+\State \hspace{0.5cm} \textbf{Private:}
+\State \hspace{1cm} \textit{id} $\rightarrow$ string
+\State \hspace{1cm} \textit{callsign} $\rightarrow$ string
+\State \hspace{1cm} \textit{status} $\rightarrow$ string
+\State \hspace{1cm} \textit{x, y} $\rightarrow$ double (position coordinates)
+\State \hspace{1cm} \textit{altitude} $\rightarrow$ double
+\State \hspace{1cm} \textit{speed} $\rightarrow$ double
+\State \hspace{1cm} \textit{heading} $\rightarrow$ integer
+\State \hspace{0.5cm} \textbf{Public:}
+\State \hspace{1cm} \textbf{Constructor} Aircraft(id, callsign, status, x, y, altitude, speed, heading)
+\State \hspace{1.5cm} Set \textit{this.id} $\leftarrow$ id
+\State \hspace{1.5cm} Set \textit{this.callsign} $\leftarrow$ callsign
+\State \hspace{1.5cm} Set \textit{this.status} $\leftarrow$ status
+\State \hspace{1.5cm} Set \textit{this.x} $\leftarrow$ x, \textit{this.y} $\leftarrow$ y
+\State \hspace{1.5cm} Set \textit{this.altitude} $\leftarrow$ altitude
+\State \hspace{1.5cm} Set \textit{this.speed} $\leftarrow$ speed
+\State \hspace{1.5cm} Set \textit{this.heading} $\leftarrow$ heading
+\State \hspace{1cm} \textbf{End Constructor}
+\State \textbf{End Class}
+\State \textbf{Expected Result:} Aircraft object created with all attributes initialized
+\end{algorithmic}
+\end{algorithm}
+
+% -------------------------------------------------------
+% FUNCTIONALITY 2: Display Aircraft Info
+% -------------------------------------------------------
+\begin{algorithm}
+\caption{Display Aircraft Information}
+\begin{algorithmic}[1]
+\State \textbf{Functionality:} Display Aircraft Info
+\State \textbf{Purpose:} Output all current flight data for an aircraft to the console
+\State \textbf{Input:} An Aircraft object
+\State \textbf{Output:} Printed flight details to console
+\vspace{0.3cm}
+\State \textbf{Function} displayInfo()
+\State \hspace{1cm} Output ``Flight ID: '', id
+\State \hspace{1cm} Output ``Callsign: '', callsign
+\State \hspace{1cm} Output ``Status: '', status
+\State \hspace{1cm} Output ``Position: ('', x, ``, '', y, ``)''
+\State \hspace{1cm} Output ``Altitude: '', altitude, `` ft''
+\State \hspace{1cm} Output ``Speed: '', speed, `` knots''
+\State \hspace{1cm} Output ``Heading: '', heading, `` degrees''
+\State \textbf{End Function}
+\State \textbf{Expected Result:} All aircraft attributes printed on one line
+\end{algorithmic}
+\end{algorithm}
+
+% -------------------------------------------------------
+% FUNCTIONALITY 3: Update Aircraft Position
+% -------------------------------------------------------
+\begin{algorithm}
+\caption{Update Aircraft Position}
+\begin{algorithmic}[1]
+\State \textbf{Functionality:} Update Aircraft Position
+\State \textbf{Purpose:} Modify the position, speed, and heading of an aircraft as it moves
+\State \textbf{Input:} new x, new y, new altitude, new speed, new heading
+\State \textbf{Output:} Aircraft object with updated positional attributes
+\vspace{0.3cm}
+\State \textbf{Function} updatePosition(x, y, altitude, speed, heading)
+\State \hspace{1cm} \textbf{Validation:}
+\State \hspace{1.5cm} \If{altitude $< 0$} Output error: ``Invalid altitude'' \EndIf
+\State \hspace{1.5cm} \If{speed $< 0$} Output error: ``Invalid speed'' \EndIf
+\State \hspace{1.5cm} \If{heading $< 0$ \textbf{or} heading $> 360$} Output error: ``Invalid heading'' \EndIf
+\State \hspace{1cm} \textbf{Update:}
+\State \hspace{1.5cm} \textit{this.x} $\leftarrow$ x
+\State \hspace{1.5cm} \textit{this.y} $\leftarrow$ y
+\State \hspace{1.5cm} \textit{this.altitude} $\leftarrow$ altitude
+\State \hspace{1.5cm} \textit{this.speed} $\leftarrow$ speed
+\State \hspace{1.5cm} \textit{this.heading} $\leftarrow$ heading
+\State \textbf{End Function}
+\State \textbf{Expected Result:} Aircraft position data updated successfully
+\end{algorithmic}
+\end{algorithm}
+
+% -------------------------------------------------------
+% FUNCTIONALITY 4: Assign Aircraft to Runway
+% -------------------------------------------------------
+\begin{algorithm}
+\caption{Assign Aircraft to Runway}
+\begin{algorithmic}[1]
+\State \textbf{Functionality:} Assign Aircraft to Runway
+\State \textbf{Purpose:} Assign an incoming aircraft to an available runway
+\State \textbf{Input:} aircraftId (string)
+\State \textbf{Output:} true if assignment successful, false if runway is occupied
+\vspace{0.3cm}
+\State \textbf{Function} assignAircraft(aircraftId) $\rightarrow$ boolean
+\State \hspace{1cm} \If{isOccupied = false}
+\State \hspace{1.5cm} assignedAircraftId $\leftarrow$ aircraftId
+\State \hspace{1.5cm} isOccupied $\leftarrow$ true
+\State \hspace{1.5cm} \Return true
+\State \hspace{1cm} \Else
+\State \hspace{1.5cm} \Return false
+\State \hspace{1cm} \EndIf
+\State \textbf{End Function}
+\State \textbf{Expected Result:} Runway marked as occupied and linked to the aircraft, or failure returned
+\end{algorithmic}
+\end{algorithm}
+
+% -------------------------------------------------------
+% FUNCTIONALITY 5: Clear Runway
+% -------------------------------------------------------
+\begin{algorithm}
+\caption{Clear Runway}
+\begin{algorithmic}[1]
+\State \textbf{Functionality:} Clear Runway
+\State \textbf{Purpose:} Release a runway after an aircraft has departed or vacated
+\State \textbf{Input:} None (called on a Runway object)
+\State \textbf{Output:} Runway reset to available state
+\vspace{0.3cm}
+\State \textbf{Function} clearRunway()
+\State \hspace{1cm} \textbf{Validation:}
+\State \hspace{1.5cm} \If{isOccupied = false}
+\State \hspace{2cm} Output ``Runway is already clear''
+\State \hspace{2cm} \Return
+\State \hspace{1.5cm} \EndIf
+\State \hspace{1cm} \textbf{Clear:}
+\State \hspace{1.5cm} assignedAircraftId $\leftarrow$ ``''
+\State \hspace{1.5cm} isOccupied $\leftarrow$ false
+\State \textbf{End Function}
+\State \textbf{Expected Result:} Runway is available for the next aircraft assignment
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}
