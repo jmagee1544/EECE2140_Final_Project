@@ -1,0 +1,7 @@
+# Windows metadata files
+*.Identifier
+*.endpointdlp
+
+# Compiled output
+src/ATC
+*.o
