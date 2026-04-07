@@ -1,5 +1,6 @@
 #include "Aircraft.h"
 #include "Runway.h"
+#include "AirTrafficEntity.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -15,6 +16,13 @@ queue<Aircraft> loadFlights(const string &filename)
     queue<Aircraft> flightQueue;
     ifstream file(filename);
     string line;
+
+    // Safety check for file opening
+    if (!file.is_open())
+    {
+        cout << "Error: Could not open file " << filename << endl;
+        return flightQueue;
+    }
 
     // Skip the header row
     getline(file, line);
@@ -52,19 +60,23 @@ queue<Aircraft> loadFlights(const string &filename)
             stod(lat),
             stod(alt),
             stod(vel),
-            stoi(track),
+            static_cast<int>(stod(track)),              // Convert track to int (numeric conversion)
             reqType);
         flightQueue.push(a);
     }
     return flightQueue;
 }
 
-// Prints the current occupancy status of both runways
-void printStatus(const Runway &r1, const Runway &r2)
+// Prints the current occupancy status of both runways, using base class pointers
+void printStatus(const vector<AirTrafficEntity*> &entities)
 {
     cout << "\n--- Runway Status ---" << endl;
-    r1.displayInfo();
-    r2.displayInfo();
+
+    // Polymorphic display of all runways in the system through inherited objects
+    for (AirTrafficEntity* entity : entities)
+    {
+        entity->displayInfo();
+    }
     cout << "---------------------\n" << endl;
 }
 
@@ -83,6 +95,11 @@ int main()
     Runway r1("R001", 4000, 90);
     Runway r2("R002", 3500, 270);
 
+    // AirTrafficEntity as pointers for inheritance and polymorphic display
+    vector<AirTrafficEntity*> runwayEntities;
+    runwayEntities.push_back(&r1);
+    runwayEntities.push_back(&r2);
+
     cout << "========================================" << endl;
     cout << "   ATC SYSTEM ONLINE - BOS Airport      " << endl;
     cout << "========================================" << endl;
@@ -97,10 +114,12 @@ int main()
         Aircraft current = flightQueue.front();
         flightQueue.pop();
 
+        AirTrafficEntity* currentEntity = &current;
+
         // Display the incoming flight request
         cout << "[INCOMING] " << current.getCalsign()
              << " requesting " << current.getRequestType() << "." << endl;
-        current.displayInfo();
+        currentEntity->displayInfo();
         cout << endl;
 
         // Keep prompting the controller until the flight is handled
@@ -113,7 +132,7 @@ int main()
 
             if (cmd == "assign R001" || cmd == "assign r001")
             {
-                if (r1.assignAircraft(current.getFlightId()))
+                if (r1.assignAircraft(current.getId()))
                 {
                     cout << "[CONFIRMED] " << current.getCalsign()
                          << " assigned to R001." << endl;
@@ -134,7 +153,7 @@ int main()
             }
             else if (cmd == "assign R002" || cmd == "assign r002")
             {
-                if (r2.assignAircraft(current.getFlightId()))
+                if (r2.assignAircraft(current.getId()))
                 {
                     cout << "[CONFIRMED] " << current.getCalsign()
                          << " assigned to R002." << endl;
@@ -162,7 +181,7 @@ int main()
             }
             else if (cmd == "status")
             {
-                printStatus(r1, r2);
+                printStatus(runwayEntities);
             }
             else
             {

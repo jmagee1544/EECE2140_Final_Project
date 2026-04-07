@@ -9,14 +9,16 @@ class Runway : public AirTrafficEntity {
 private:
     string runwayId;                // Unique identifier for the runway
     string assignedAircraftId;      // ID of the aircraft currently assigned to this runway
-    string getId() const override;  // Unique identifier of this runway
     int length;                     // Length of the runway in meters
     int orientation;                // Runway orientation in degrees
     bool isOccupied;                // True if the runway is currently in use
-    
+
 public:
     // Constructs a Runway with the given ID, length, and orientation
     Runway(string runwayId, int length, int orientation);
+
+    // Unique identifier of this runway
+    string getId() const override; 
 
     // Returns the unique runway identifier
     string getRunwayId() const;
