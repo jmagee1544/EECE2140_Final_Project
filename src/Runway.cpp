@@ -1,10 +1,13 @@
 #include "Runway.h"
 #include <iostream>
+#include <cmath>
 using namespace std;
+
+const double Runway::MIN_SEPARATION = 5.0;
 
 // Constructs a Runway with the given ID, length, and orientation, initializing it as unoccupied
 Runway::Runway(string runwayId, int length, int orientation)
-    : runwayId(runwayId), length(length), orientation(orientation), isOccupied(false), assignedAircraftId("")
+    : runwayId(runwayId), length(length), orientation(orientation), isOccupied(false), assignedAircraftId(""), lastX(0.0), lastY(0.0)
 {
 }
 
@@ -45,12 +48,24 @@ bool Runway::getIsOccupied() const
     return isOccupied;
 }
 
-// Assigns an aircraft to this runway if it is available; returns true on success, false if already occupied
-bool Runway::assignAircraft(string aircraftId)
+// Checks if incoming aircraft is safely separated from the last assigned aircraft
+// Constant time distance check between two positions
+bool Runway::checkSpacing(double incomingX, double incomingY) const
 {
-    if (!isOccupied)
+    if (!isOccupied) return true;
+    double dx = incomingX - lastX;
+    double dy = incomingY - lastY;
+    return sqrt(dx * dx + dy * dy) >= MIN_SEPARATION;
+}
+
+// Assigns an aircraft to this runway if available and spacing requirements are met
+bool Runway::assignAircraft(string aircraftId, double x, double y)
+{
+    if (!isOccupied && checkSpacing(x, y))
     {
         assignedAircraftId = aircraftId;
+        lastX = x;
+        lastY = y;
         isOccupied = true;
         return true;
     }

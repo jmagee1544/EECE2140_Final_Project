@@ -3,28 +3,31 @@
 
 #include <string>
 #include "AirTrafficEntity.h"
-using namespace std;
 
 class Runway : public AirTrafficEntity {
 private:
-    string runwayId;                // Unique identifier for the runway
-    string assignedAircraftId;      // ID of the aircraft currently assigned to this runway
+    std::string runwayId;                // Unique identifier for the runway
+    std::string assignedAircraftId;      // ID of the aircraft currently assigned to this runway
     int length;                     // Length of the runway in meters
     int orientation;                // Runway orientation in degrees
     bool isOccupied;                // True if the runway is currently in use
+    double lastX;                   // X position of last assigned aircraft
+    double lastY;                   // Y position of last assigned aircraft
+    static const double MIN_SEPARATION;
+    bool checkSpacing(double incomingX, double incomingY) const;
 
 public:
     // Constructs a Runway with the given ID, length, and orientation
-    Runway(string runwayId, int length, int orientation);
+    Runway(std::string runwayId, int length, int orientation);
 
     // Unique identifier of this runway
-    string getId() const override; 
+    std::string getId() const override; 
 
     // Returns the unique runway identifier
-    string getRunwayId() const;
+    std::string getRunwayId() const;
 
     // Returns the ID of the aircraft currently assigned to this runway
-    string getAssignedAircraftId() const;
+    std::string getAssignedAircraftId() const;
 
     // Returns the runway length in meters
     int getLength() const;
@@ -36,12 +39,15 @@ public:
     bool getIsOccupied() const;
 
     // Assigns an aircraft to this runway if available; returns true on success, false if occupied
-    bool assignAircraft(string aircraftId);
+    bool assignAircraft(std::string aircraftId, double x, double y);
 
     // Clears the runway, removing the assigned aircraft and marking it as available
     void clearRunway();
 
     // Prints a formatted summary of the runway's current status to standard output
     void displayInfo() const override;
+
+    // Destructor
+    virtual ~Runway() {}
 };
 #endif // Runway.h

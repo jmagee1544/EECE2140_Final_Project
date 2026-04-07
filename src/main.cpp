@@ -52,32 +52,40 @@ queue<Aircraft> loadFlights(const string &filename)
         // Set status based on whether the flight is landing or taking off
         string status = (reqType == "landing") ? "Inbound" : "Outbound";
 
-        Aircraft a(
-            icao24,
-            callsign,
-            status,
-            stod(lon),
-            stod(lat),
-            stod(alt),
-            stod(vel),
-            static_cast<int>(stod(track)),              // Convert track to int (numeric conversion)
-            reqType);
-        flightQueue.push(a);
+        try
+        {
+            Aircraft a(
+                icao24,
+                callsign,
+                status,
+                stod(lon),
+                stod(lat),
+                stod(alt),
+                stod(vel),
+                static_cast<int>(stod(track)),
+                reqType);
+            flightQueue.push(a);
+        }
+        catch (const invalid_argument &e)
+        {
+            cout << "Warning: Skipping malformed flight entry for " << callsign << endl;
+        }
     }
     return flightQueue;
 }
 
 // Prints the current occupancy status of both runways, using base class pointers
-void printStatus(const vector<AirTrafficEntity*> &entities)
+void printStatus(const vector<AirTrafficEntity *> &entities)
 {
     cout << "\n--- Runway Status ---" << endl;
 
     // Polymorphic display of all runways in the system through inherited objects
-    for (AirTrafficEntity* entity : entities)
+    for (AirTrafficEntity *entity : entities)
     {
         entity->displayInfo();
     }
-    cout << "---------------------\n" << endl;
+    cout << "---------------------\n"
+         << endl;
 }
 
 int main()
@@ -92,11 +100,17 @@ int main()
     }
 
     // Initialize two runways
-    Runway r1("R001", 4000, 90);
-    Runway r2("R002", 3500, 270);
+    const int RUNWAY1_LENGTH = 4000;
+    const int RUNWAY1_ORIENTATION = 90;
+    const int RUNWAY2_LENGTH = 3500;
+    const int RUNWAY2_ORIENTATION = 270;
+
+    Runway r1("R001", RUNWAY1_LENGTH, RUNWAY1_ORIENTATION);
+    Runway r2("R002", RUNWAY2_LENGTH, RUNWAY2_ORIENTATION);
 
     // AirTrafficEntity as pointers for inheritance and polymorphic display
-    vector<AirTrafficEntity*> runwayEntities;
+    // Raw pointers to stack-allocated objects — no ownership, no delete needed
+    vector<AirTrafficEntity *> runwayEntities;
     runwayEntities.push_back(&r1);
     runwayEntities.push_back(&r2);
 
@@ -104,9 +118,13 @@ int main()
     cout << "   ATC SYSTEM ONLINE - BOS Airport      " << endl;
     cout << "========================================" << endl;
     cout << "Commands: assign R001 | assign R002 | deny | status" << endl;
-    cout << "========================================\n" << endl;
+    cout << "========================================\n"
+         << endl;
 
-    sleep(1);
+    const int OPERATION_DELAY = 2;
+    const int FLIGHT_DELAY = 1;
+
+    sleep(FLIGHT_DELAY);
 
     // Process each flight in the queue one at a time
     while (!flightQueue.empty())
@@ -114,10 +132,10 @@ int main()
         Aircraft current = flightQueue.front();
         flightQueue.pop();
 
-        AirTrafficEntity* currentEntity = &current;
+        AirTrafficEntity *currentEntity = &current;
 
         // Display the incoming flight request
-        cout << "[INCOMING] " << current.getCalsign()
+        cout << "[INCOMING] " << current.getcallsign()
              << " requesting " << current.getRequestType() << "." << endl;
         currentEntity->displayInfo();
         cout << endl;
@@ -132,51 +150,56 @@ int main()
 
             if (cmd == "assign R001" || cmd == "assign r001")
             {
-                if (r1.assignAircraft(current.getId()))
+                if (r1.assignAircraft(current.getId(), current.getX(), current.getY()))
                 {
-                    cout << "[CONFIRMED] " << current.getCalsign()
+                    cout << "[CONFIRMED] " << current.getcallsign()
                          << " assigned to R001." << endl;
-                    cout << "[CLEARED] " << current.getCalsign()
+                    cout << "[CLEARED] " << current.getcallsign()
                          << " cleared for " << current.getRequestType()
                          << " on R001." << endl;
-                    sleep(2); // Simulate time for landing/takeoff
-                    cout << "[SUCCESS] " << current.getCalsign()
+                    sleep(OPERATION_DELAY); // Simulate time for landing/takeoff
+                    cout << "[SUCCESS] " << current.getcallsign()
                          << " has completed " << current.getRequestType()
-                         << " successfully. R001 is now clear.\n" << endl;
+                         << " successfully. R001 is now clear.\n"
+                         << endl;
                     handled = true;
                     r1.clearRunway();
                 }
                 else
                 {
-                    cout << "[ERROR] R001 is occupied. Choose another runway or deny.\n" << endl;
+                    cout << "[ERROR] R001 unavailable: occupied or spacing requirements not met. Choose another runway or deny.\n"
+                         << endl;
                 }
             }
             else if (cmd == "assign R002" || cmd == "assign r002")
             {
-                if (r2.assignAircraft(current.getId()))
+                if (r2.assignAircraft(current.getId(), current.getX(), current.getY()))
                 {
-                    cout << "[CONFIRMED] " << current.getCalsign()
+                    cout << "[CONFIRMED] " << current.getcallsign()
                          << " assigned to R002." << endl;
-                    cout << "[CLEARED] " << current.getCalsign()
+                    cout << "[CLEARED] " << current.getcallsign()
                          << " cleared for " << current.getRequestType()
                          << " on R002." << endl;
-                    sleep(2); // Simulate time for landing/takeoff
-                    cout << "[SUCCESS] " << current.getCalsign()
+                    sleep(OPERATION_DELAY); // Simulate time for landing/takeoff
+                    cout << "[SUCCESS] " << current.getcallsign()
                          << " has completed " << current.getRequestType()
-                         << " successfully. R002 is now clear.\n" << endl;
+                         << " successfully. R002 is now clear.\n"
+                         << endl;
                     handled = true;
                     r2.clearRunway();
                 }
                 else
                 {
-                    cout << "[ERROR] R002 is occupied. Choose another runway or deny.\n" << endl;
+                    cout << "[ERROR] R002 unavailable: occupied or spacing requirements not met. Choose another runway or deny.\n"
+                         << endl;
                 }
             }
             else if (cmd == "deny")
             {
                 // Controller denied the request, move to next flight
-                cout << "[DENIED] " << current.getCalsign()
-                     << " request denied. Aircraft holding.\n" << endl;
+                cout << "[DENIED] " << current.getcallsign()
+                     << " request denied. Aircraft holding.\n"
+                     << endl;
                 handled = true;
             }
             else if (cmd == "status")
@@ -188,7 +211,7 @@ int main()
                 cout << "[UNKNOWN COMMAND] Use: assign R001 | assign R002 | deny | status" << endl;
             }
         }
-        sleep(1);
+        sleep(FLIGHT_DELAY);
     }
 
     cout << "========================================" << endl;

@@ -3,21 +3,16 @@
 using namespace std;
 
 // Constructs an Aircraft with all flight parameters including identity, position, and request type
-Aircraft::Aircraft(string id, string calsign, string status, double x, double y, double altitude, double speed, int heading, string requestType)
-    : id(id), calsign(calsign), status(status), x(x), y(y), altitude(altitude), speed(speed), heading(heading), requestType(requestType)
+Aircraft::Aircraft(string id, string callsign, string status, double x, double y, double altitude, double speed, int heading, string requestType)
+    : id(id), callsign(callsign), status(status), x(x), y(y), altitude(altitude), speed(speed), heading(heading), requestType(requestType)
 {
 }
 
-// Returns the unique flight identifier
-string Aircraft::getFlightId() const
-{
-    return id;
-}
 
 // Returns the aircraft callsign
-string Aircraft::getCalsign() const
+string Aircraft::getcallsign() const
 {
-    return calsign;
+    return callsign;
 }
 
 // Returns the current flight status (e.g., airborne, landed)
@@ -61,6 +56,8 @@ string Aircraft::getRequestType() const
 {
     return requestType;
 }
+
+// Returns the unique identifier of this aircraft
 string Aircraft::getId() const {
     return id;
 }
@@ -83,7 +80,7 @@ void Aircraft::updateStatus(string status)
 // Prints a formatted summary of all aircraft flight information to standard output
 void Aircraft::displayInfo() const
 {
-    cout << "Flight ID: " << id << ", Calsign: " << calsign << ", Status: " << status
+    cout << "Flight ID: " << id << ", callsign: " << callsign << ", Status: " << status
          << ", Position: (" << x << ", " << y << "), Altitude: " << altitude
          << " ft, Speed: " << speed << " knots, Heading: " << heading << " degrees" << endl;
 }
