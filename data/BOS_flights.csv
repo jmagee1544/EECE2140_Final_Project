@@ -1,0 +1,16 @@
+icao24,callsign,origin_country,longitude,latitude,baro_altitude,on_ground,velocity,true_track,vertical_rate,request_type
+a1b2c3,DAL423,United States,-71.0050,42.3656,2400.0,false,250.0,90,-5.2,landing
+b2c3d4,UAL789,United States,-71.0200,42.3800,0.0,true,0.0,270,0.0,takeoff
+c3d4e5,AAL156,United States,-70.9900,42.3500,3600.0,false,260.0,180,-4.8,landing
+d4e5f6,JBU334,United States,-71.0100,42.3750,0.0,true,0.0,90,0.0,takeoff
+e5f6g7,SWA901,United States,-71.0300,42.3600,1800.0,false,240.0,135,-6.1,landing
+f6g7h8,FDX271,United States,-71.0150,42.3700,0.0,true,0.0,180,0.0,takeoff
+g7h8i9,DAL887,United States,-70.9800,42.3550,4200.0,false,270.0,270,-3.9,landing
+h8i9j0,UAL512,United States,-71.0250,42.3850,0.0,true,0.0,90,0.0,takeoff
+i9j0k1,AAL045,United States,-71.0050,42.3650,3000.0,false,255.0,225,-5.5,landing
+j0k1l2,JBU678,United States,-71.0100,42.3780,0.0,true,0.0,270,0.0,takeoff
+k1l2m3,SWA302,United States,-70.9950,42.3520,5400.0,false,280.0,315,-4.2,landing
+l2m3n4,BAW212,United Kingdom,-71.0200,42.3900,0.0,true,0.0,135,0.0,takeoff
+m3n4o5,DLH441,Germany,-70.9850,42.3480,6000.0,false,290.0,45,-3.7,landing
+n4o5p6,WJA119,Canada,-71.0300,42.3750,0.0,true,0.0,180,0.0,takeoff
+o5p6q7,AAL233,United States,-71.0000,42.3600,2100.0,false,245.0,270,-5.8,landing
