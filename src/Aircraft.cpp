@@ -2,8 +2,8 @@
 #include <iostream>
 using namespace std;
 
-Aircraft::Aircraft(string id, string calsign, string status, double x, double y, double altitude, double speed, int heading)
-    : id(id), calsign(calsign), status(status), x(x), y(y), altitude(altitude), speed(speed), heading(heading)
+Aircraft::Aircraft(string id, string calsign, string status, double x, double y, double altitude, double speed, int heading, string requestType)
+    : id(id), calsign(calsign), status(status), x(x), y(y), altitude(altitude), speed(speed), heading(heading), requestType(requestType)
 {
 }
 
@@ -45,6 +45,11 @@ double Aircraft::getSpeed() const
 int Aircraft::getHeading() const
 {
     return heading;
+}
+
+string Aircraft::getRequestType() const
+{
+    return requestType;
 }
 
 void Aircraft::updatePosition(double x, double y, double altitude, double speed, int heading)

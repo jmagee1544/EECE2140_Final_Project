@@ -9,14 +9,16 @@ private:
     std::string id;
     std::string calsign;
     std::string status;
+    std::string requestType;
     double x;
     double y;
     double altitude;
     double speed;
     int heading;
+    
 
 public:
-    Aircraft(std::string id, std::string calsign, std::string status, double x, double y, double altitude, double speed, int heading);
+    Aircraft(std::string id, std::string calsign, std::string status, double x, double y, double altitude, double speed, int heading, std::string requestType);
     std::string getFlightId() const;
     std::string getCalsign() const;
     std::string getStatus() const;
@@ -25,6 +27,7 @@ public:
     double getAltitude() const;
     double getSpeed() const;
     int getHeading() const;
+    std::string getRequestType() const;
     void updatePosition(double x, double y, double altitude, double speed, int heading);
     void updateStatus(std::string status);
     void displayInfo() const;
