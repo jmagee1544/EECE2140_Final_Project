@@ -61,7 +61,9 @@ string Aircraft::getRequestType() const
 {
     return requestType;
 }
-
+string Aircraft::getId() const {
+    return id;
+}
 // Updates the aircraft's positional data including coordinates, altitude, speed, and heading
 void Aircraft::updatePosition(double x, double y, double altitude, double speed, int heading)
 {

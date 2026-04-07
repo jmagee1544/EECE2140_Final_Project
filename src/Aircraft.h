@@ -1,60 +1,47 @@
 #ifndef AIRCRAFT_H
 #define AIRCRAFT_H
+
 #include <string>
+#include "AirTrafficEntity.h"
 using namespace std;
 
-class Aircraft
-{
+class Aircraft : public AirTrafficEntity {
 private:
-    std::string id;          // Unique flight identifier
-    std::string calsign;     // Aircraft callsign
-    std::string status;      // Current flight status (e.g., airborne, landed)
-    std::string requestType; // Type of ATC request associated with this aircraft
-    double x;                // Current X coordinate
-    double y;                // Current Y coordinate
-    double altitude;         // Current altitude in feet
-    double speed;            // Current speed in knots
-    int heading;             // Current heading in degrees
+    string id;
+    string calsign;
+    string status;
+    string requestType;
+    double x;
+    double y;
+    double altitude;
+    double speed;
+    int heading;
 
 public:
-    // Constructs an Aircraft with all flight parameters including identity, position, and request type
-    Aircraft(std::string id, std::string calsign, std::string status, double x, double y, double altitude, double speed, int heading, std::string requestType);
+    Aircraft(string id, string calsign, string status,
+             double x, double y, double altitude,
+             double speed, int heading, string requestType);
 
-    // Returns the unique flight identifier
-    std::string getFlightId() const;
+    // override from base class
+    string getId() const override;
 
-    // Returns the aircraft callsign
-    std::string getCalsign() const;
-
-    // Returns the current flight status
-    std::string getStatus() const;
-
-    // Returns the aircraft's current X coordinate
+    // existing getters
+    string getFlightId() const;
+    string getCalsign() const;
+    string getStatus() const;
     double getX() const;
-
-    // Returns the aircraft's current Y coordinate
     double getY() const;
-
-    // Returns the aircraft's current altitude in feet
     double getAltitude() const;
-
-    // Returns the aircraft's current speed in knots
     double getSpeed() const;
-
-    // Returns the aircraft's current heading in degrees
     int getHeading() const;
+    string getRequestType() const;
 
-    // Returns the type of ATC request associated with this aircraft
-    std::string getRequestType() const;
-
-    // Updates the aircraft's positional data including coordinates, altitude, speed, and heading
+    // setters / updates
     void updatePosition(double x, double y, double altitude, double speed, int heading);
+    void updateStatus(string status);
 
-    // Updates the aircraft's current flight status
-    void updateStatus(std::string status);
-
-    // Prints a formatted summary of all aircraft flight information to standard output
-    void displayInfo() const;
+    // override display
+    void displayInfo() const override;
 };
 
-#endif // AIRCRAFT_H
+#endif
