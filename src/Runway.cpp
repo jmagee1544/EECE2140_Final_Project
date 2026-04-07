@@ -20,6 +20,13 @@ string Runway::getAssignedAircraftId() const
     return assignedAircraftId;
 }
 
+// Returns the unique identifier of this runway
+string Runway::getId() const 
+{
+    return runwayId;
+}
+
+
 // Returns the runway length in meters
 int Runway::getLength() const
 {

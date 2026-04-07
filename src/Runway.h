@@ -1,16 +1,19 @@
 #ifndef RUNWAY_H
 #define RUNWAY_H
+
 #include <string>
+#include "AirTrafficEntity.h"
 using namespace std;
 
-class Runway {
+class Runway : public AirTrafficEntity {
 private:
-    string runwayId;           // Unique identifier for the runway
-    string assignedAircraftId; // ID of the aircraft currently assigned to this runway
-    int length;                // Length of the runway in meters
-    int orientation;           // Runway orientation in degrees
-    bool isOccupied;           // True if the runway is currently in use
-
+    string runwayId;                // Unique identifier for the runway
+    string assignedAircraftId;      // ID of the aircraft currently assigned to this runway
+    string getId() const override;  // Unique identifier of this runway
+    int length;                     // Length of the runway in meters
+    int orientation;                // Runway orientation in degrees
+    bool isOccupied;                // True if the runway is currently in use
+    
 public:
     // Constructs a Runway with the given ID, length, and orientation
     Runway(string runwayId, int length, int orientation);
@@ -37,6 +40,6 @@ public:
     void clearRunway();
 
     // Prints a formatted summary of the runway's current status to standard output
-    void displayInfo() const;
+    void displayInfo() const override;
 };
 #endif // Runway.h
