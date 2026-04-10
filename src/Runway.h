@@ -6,48 +6,41 @@
 
 class Runway : public AirTrafficEntity {
 private:
-    std::string runwayId;                // Unique identifier for the runway
-    std::string assignedAircraftId;      // ID of the aircraft currently assigned to this runway
-    int length;                     // Length of the runway in meters
-    int orientation;                // Runway orientation in degrees
-    bool isOccupied;                // True if the runway is currently in use
-    double lastX;                   // X position of last assigned aircraft
-    double lastY;                   // Y position of last assigned aircraft
+    std::string runwayId;
+    std::string assignedAircraftId;
+    int length;
+    int orientation;
+    bool isOccupied;
+    double lastX;
+    double lastY;
+    int clearCountdown;   // Cycles remaining before runway can be cleared
     static const double MIN_SEPARATION;
     bool checkSpacing(double incomingX, double incomingY) const;
 
 public:
-    // Constructs a Runway with the given ID, length, and orientation
     Runway(std::string runwayId, int length, int orientation);
 
-    // Unique identifier of this runway
-    std::string getId() const override; 
-
-    // Returns the unique runway identifier
+    std::string getId() const override;
     std::string getRunwayId() const;
-
-    // Returns the ID of the aircraft currently assigned to this runway
     std::string getAssignedAircraftId() const;
-
-    // Returns the runway length in meters
     int getLength() const;
-
-    // Returns the runway orientation in degrees
     int getOrientation() const;
-
-    // Returns true if the runway is currently occupied, false otherwise
     bool getIsOccupied() const;
 
-    // Assigns an aircraft to this runway if available; returns true on success, false if occupied
-    bool assignAircraft(std::string aircraftId, double x, double y);
+    // Returns true if the runway has served enough cycles and can be manually cleared
+    bool isClearable() const;
 
-    // Clears the runway, removing the assigned aircraft and marking it as available
+    // Decrements the clearCountdown each flight cycle
+    void tick();
+
+    // Assigns aircraft with a cycle lock (1 for landing, 2 for takeoff)
+    bool assignAircraft(std::string aircraftId, double x, double y, int cycles);
+
     void clearRunway();
-
-    // Prints a formatted summary of the runway's current status to standard output
     void displayInfo() const override;
 
-    // Destructor
+    // No dynamic memory — compiler-generated copy/move/assignment are sufficient
     virtual ~Runway() {}
 };
-#endif // Runway.h
+
+#endif

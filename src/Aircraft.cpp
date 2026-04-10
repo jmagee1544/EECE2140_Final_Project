@@ -6,11 +6,14 @@ using namespace std;
 Aircraft::Aircraft(string id, string callsign, string status, double x, double y, double altitude, double speed, int heading, string requestType)
     : id(id), callsign(callsign), status(status), x(x), y(y), altitude(altitude), speed(speed), heading(heading), requestType(requestType)
 {
+    if (altitude < 0) altitude = 0;
+    if (speed < 0) speed = 0;
+    if (heading < 0 || heading > 360) heading = 0;
 }
 
 
-// Returns the aircraft callsign
-string Aircraft::getcallsign() const
+// Returns the aircraft Callsign
+string Aircraft::getCallsign() const
 {
     return callsign;
 }
@@ -80,7 +83,7 @@ void Aircraft::updateStatus(string status)
 // Prints a formatted summary of all aircraft flight information to standard output
 void Aircraft::displayInfo() const
 {
-    cout << "Flight ID: " << id << ", callsign: " << callsign << ", Status: " << status
+    cout << "Flight ID: " << id << ", Callsign: " << callsign << ", Status: " << status
          << ", Position: (" << x << ", " << y << "), Altitude: " << altitude
          << " ft, Speed: " << speed << " knots, Heading: " << heading << " degrees" << endl;
 }

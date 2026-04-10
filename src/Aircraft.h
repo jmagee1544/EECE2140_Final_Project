@@ -25,7 +25,7 @@ public:
     std::string getId() const override;
 
     // existing getters
-    std::string getcallsign() const;
+    std::string getCallsign() const;
     std::string getStatus() const;
     double getX() const;
     double getY() const;
@@ -41,6 +41,7 @@ public:
     // override display
     void displayInfo() const override;
 
+    // No dynamic memory — compiler-generated copy/move/assignment are sufficient
     // Destructor
     virtual ~Aircraft() {}
 };
