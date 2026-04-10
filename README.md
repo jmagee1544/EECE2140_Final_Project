@@ -4,34 +4,41 @@
 
 ## Project Overview
 
-The Air-Traffic Control (ATC) Mini-System is a simplified C++ simulation that models core air-traffic control operations. Using data from a CSV file, the system tracks aircraft in real-time and utilizes algorithms to manage runway assignments, enforce safety constraints, and generate alerts when violations occur. A controller is used to assign aircraft to available runways for landing or takeoff.
+The Air-Traffic Control (ATC) Mini-System is a simplified C++ simulation that models core air-traffic control operations. Using data from a CSV file, the system processes aircraft requests and manages runway assignments through an interactive controller interface. The system enforces operational constraints such as runway availability and cycle-based usage timing, while maintaining a structured log of controller actions throughout the session.
 
-This project demonstrates object-oriented programming concepts such as encapsulation, inheritance, and polymorphism, while also applying data structures such as vectors and queues in a practical and systematic simulation. It illustrates how real-world ATC systems ensure safe and efficient aircraft movement in a collaborative development environment.
+This project demonstrates object-oriented programming concepts such as encapsulation, inheritance, and polymorphism, while also applying data structures such as vectors and queues in a practical and systematic simulation. It illustrates how real-world ATC systems simulate key aspects of safe and efficient aircraft movement in a collaborative development environment.
 
 ## Main Functionalities
 
-* **Live Aircraft Tracking**\
-Monitors the real-time state information (position, altitude, speed, heading, and status) for all active aircraft.
+* **Flight Data Parsing**\
+Reads flight data from a CSV file and converts each entry into an Aircraft object. Objects are stored in a queue using a first-in-first-out (FIFO) format to simulate the arrival of aircraft requests.
 
-* **Runway Assignment**\
-Allows the controller to assign aircraft to available runways for landing or takeoff, while ensuring safety constraints are met (ie, spacing conditions).
+* **Cycle-Based Runway Assignment**\
+Aircraft are assigned to one of three runways: `R01`, `R02`, `R03`. Each assignment locks the runway for a fixed number of processing cycles in the queue (2 cycles for takeoff, 1 cycle for landing). Runways cannot be cleared until their cycle count reaches zero.
 
-* **Runway Management**\
-Tracks runway occupancy. Marks a runway as free once an aircraft has departed or landed.
+* **Runway State Management**\
+Tracks runway occupancy using a cycle-based system that simulate time progression. Runways remain occupied until they are manually cleared, while a runway becomes clearable after completing its required cycles.
 
 * **Interactive Command System**
-Supports controller commands such as assigning aircraft to a runway, denying a request, and viewing runway status.
+Provides a command-line interface (air-traffic controller) that responds to aircraft requests. Supports controller commands such as assigning/approving an aircraft, denying a request (re-queue), and clearing a runway. 
+- `a` → approve aircraft  
+- `d` → deny aircraft (re-queued to end of queue)  
+- `a R01`, `a R02`, `a R03` → assign aircraft to a runway  
+- `clear R01`, `clear R02`, `clear R03` → manually clear a runway  
 
-* **Conflict Detection**\
-Identifies and reports unsafe conditions when separation requirements are violated. Ensures that an incoming aircraft meets the minimum safe separation requirements before runway assignment is granted.
+* **Basic Spacing Validation**\
+Performs a basic distance check between consecutive aircraft during runway assignment.
+
+* **Session Logging**  
+Records all controller actions (approvals, denials, and runway clears) and displays them at the end of the simulation.
 
 * **Information Display**\
 Outputs detailed aircraft and runway status information for monitoring and simulation.
-    * Aircraft: Flight ID, calsign, position, altitude, speed, heading, status, request type
-    * Runway: Runway ID, occupancy status, assigned aircraft
+    * Aircraft: callsign, ID, altitude, speed, request type
+    * Runway: ID, occupancy status, remaining cycles
 
 ## Object-Oriented Programming (OOP) Design Summary
-The system follows an object-oriented modular design, abstraction, inheritance, and polymorphism to ensure scalability and maintainability. The base class `AirTrafficEntity` defines common behaviors shared by all other air traffic system objects. The two inherited classes, `Aircraft` and `Runway`, provide separate implementations of shared virtual functions.
+The system follows an object-oriented modular design, using abstraction, inheritance, and polymorphism to ensure scalability and maintainability. The base class `AirTrafficEntity` defines common behaviors shared by all other air traffic system objects. The two inherited classes, `Aircraft` and `Runway`, provide separate implementations of shared virtual functions.
 
 Polymorphism is demonstrated in the main simulation by storing `Runway` and `Aircraft` objects as `AirTrafficEntity*` pointers and calling overridden methods such as `displayInfo()` and `getId()` through the base-class interface.
 
@@ -42,10 +49,10 @@ Polymorphism is demonstrated in the main simulation by storing `Runway` and `Air
 * Demonstrates abstraction and polymorphism in the project design.
 
 Public Members:
-| Attribute/Method  | Data Type | Description                                               |
-|:----------------- |:--------- |:--------------------------------------------------------- |
-| getId()           | string    | Virtual function that returns the unique ID of the entity |
-| displayInfo()     | void      | Virtual function that displays the entity’s information   |
+| Attribute/Method  | Data Type | Description                           |
+|:----------------- |:--------- |:------------------------------------- |
+| getId()           | string    | Returns the unique ID of the entity   |
+| displayInfo()     | void      | Displays the entity’s information     |
 
 ### 2. Aircraft Class
 
@@ -54,30 +61,28 @@ Public Members:
 * Includes methods for updating position and displaying aircraft data.
 
 Private Members:
-| Attrubute/Method  | Data Type     | Description                                           |
+| Attribute/Method  | Data Type     | Description                                           |
 |:----------------- |:------------- |:----------------------------------------------------- |
 | id                | string        | Unique aircraft identifier                            |
-| calsign           | string        | Airline callsign                                      |
+| callsign          | string        | Airline callsign                                      |
 | status            | string        | Status of aircraft (e.g., en route, landing, holding) |
 | requestType       | string        | Specifies the type of request (landing or takeoff)    |
-| x                 | double        | Aircraft x-coordinate position                        |
-| y                 | double        | Aircraft y-coordinate position                        |
+| x, y              | double        | Aircraft coordinates                                  |
 | altitude          | double        | Altitude (in feet)                                    |
 | speed             | double        | Speed (in knots)                                      |
-| heading           | int           | Heading degrees (0-360°)                              |
+| heading           | int           | Heading direction (0-360°)                            |
 
 Public Members:
-| Attrubute/Method  | Data Type     | Description                               |
+| Attribute/Method  | Data Type     | Description                               |
 |:----------------- |:------------- |:----------------------------------------- |
-| getId()           | string        | Returns the aircraft's unique ID          |
-| getCalsign()      | string        | Returns aircraft callsign                 |
+| getId()           | string        | Returns the aircraft's  ID                |
+| getCallsign()     | string        | Returns aircraft callsign                 |
 | getStatus()       | string        | Returns aircraft's current status         |
-| getX()            | double        | Returns x-coordinate position             |
-| getY()            | double        | Returns y-coordinate position             |
+| getX(), getY()    | double        | Returns coordinate positions              |
 | getAltitude()     | double        | Returns altitude (in feet)                |
 | getSpeed()        | double        | Returns speed (in knots)                  |
 | getHeading()      | int           | Returns heading (0-360°)                  |
-| getRequestType()  | int           | Returns landing/takeoff request type      |
+| getRequestType()  | string        | Returns landing/takeoff request type      |
 | updatePosition()  | void          | Updates x and y coordinate, and altitude  |
 | updateStatus()    | void          | Updates aircraft status                   |
 | displayInfo()     | void          | Prints all aircraft information           |
@@ -88,34 +93,38 @@ Public Members:
 * Handles aircraft assignment and enforces spacing constraints through internal validation.
 
 Private Members:
-| Attrubute/Method  | Data Type     | Description                                                                           |
-|:----------------- |:------------- |:------------------------------------------------------------------------------------- |
-| runwayID          | string        | Unique runway identifier                                                              |
-| assignedAircraftId| string        | Flight ID of aircraft currently assigned to runway                                    |
-| length            | int           | Length of runway (in feet)                                                            |
-| orientation       | int           | Runway heading/orientation (in degrees)                                               |
-| isOccupied        | bool          | Checks if runway is currently in use                                                  |
+| Attribute/Method      | Data Type     | Description                                           |
+|:--------------------- |:------------- |:----------------------------------------------------- |
+| runwayId              | string        | Unique runway identifier                              |
+| assignedAircraftId    | string        | Flight ID of aircraft currently assigned to runway    |
+| length                | int           | Length of runway (in feet)                            |
+| orientation           | int           | Runway heading/orientation (in degrees)               |
+| isOccupied            | bool          | Checks if runway is currently in use                  |
+| clearCountdown        | int           | Cycles remaining before runway can be cleared         |
+| lastX, lastY          | double        | Previous aircraft coordinates                         |
 
 
 Public Members:
-| Attrubute/Method          | Data Type     | Description                                                                       |
+| Attribute/Method          | Data Type     | Description                                                                       |
 |:------------------------- |:------------- |:--------------------------------------------------------------------------------- |
 | getId()                   | string        | Returns runway unique ID                                                          |
 | getRunwayId()             | string        | Returns runway ID                                                                 |
 | getAssignedAircraftId()   | string        | Returns assigned aircraft ID                                                      |
 | getLength()               | int           | Returns runway length                                                             |
-| getOrientation()          | int           | Returns runway orienation                                                         |
-| getIsAvailable()          | bool          | Returns runway occupancy                                                          |
-| assignAircraft()          | bool          | Calls checkSpacing()— Assigns aircraft if requirements are met, rejects if not    |
+| getOrientation()          | int           | Returns runway orientation                                                        |
+| getIsOccupied()           | bool          | Returns runway occupancy                                                          |
+| isClearable()             | bool          | Checks if runway is ready to clear                                                |
+| tick()                    | void          | Decrements cycle count after processing                                           |
+| assignAircraft()          | bool          | Assigns aircraft and locks it to a runway for a number of cycles                  |
 | clearRunway()             | void          | Clears any assigned aircraft and marks runway as unoccupied                       |
-| displayStatus()           | void          | Prints runway ID, occupancy, and its assigned aircraft                            |
+| displayInfo()             | void          | Prints runway ID, occupancy, and its assigned aircraft                            |
 
-### 4. Main Simulation Driver (main.cpp)
+### 4. Main Simulation Driver (ATC.cpp)
 
-* The `main.cpp` file acts as the controller interface for the simulation.
+* Acts as the controller interface for the simulation.
 * Loads aircraft data from the CSV file into a queue.
-* Processes aircraft requests one at a time.
-* Accepts user commands for runway assignment, denial, and status checks.
+* Processes aircraft requests sequentially
+* Accepts user commands for runway assignment `a`, denial `d`, `clear`, and status checks.
 * Demonstrates polymorphism by interacting with `Aircraft` and `Runway` objects through `AirTrafficEntity` pointers.
 
 ## Tools and Technologies
@@ -123,7 +132,7 @@ Public Members:
 * **IDE / Editor:** Visual Studio Code (for code editing and debugging)
 * **Version Control:** Git / GitHub (track changes, branching, repository hosting)
 * **Build System:** g++ (C++ compiler)
-* **Testing Framwork:** Manual / Custom Test Cases
+* **Testing Framework:** Manual / Custom Test Cases
 * **Documentation:** Markdown / PDF
 * **Project Management:** GitHub Issues & Projects
 
@@ -145,12 +154,12 @@ EECE2140_AirTrafficControl/
 ├── src/                                    # Source files for implementation
 │   ├── Aircraft.cpp
 │   ├── Runway.cpp
-│   └── main.cpp
+│   └── ATC.cpp
 │
 ├── include/                                # Header files
 │   ├── Aircraft.h
 │   ├── Runway.h
-│   └── ATC.h
+│   └── AirTrafficEntity.h
 │
 ├── data/
 │   └── BOS_flights.csv
@@ -181,3 +190,14 @@ The GitHub repository serves as the central hub for:
 * **Version Control:** Managing code changes and revision history using Git
 * **Collaboration:** Enabling a central hub for team contributions through branches and pull requests
 * **Documentation:** Storing all project-related materials and deliverables
+
+## Compile and Run Commands
+
+Compile:    `g++ ATC.cpp Aircraft.cpp Runway.cpp -o ATC`
+Run:        `./ATC`
+
+**Example Commands**
+`a`
+`a R01`
+`clear R01`
+`d`
